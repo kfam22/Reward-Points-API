@@ -1,0 +1,50 @@
+{
+  "name": "reward-points-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "server": "nodemon index.js",
+    "migrate:dev": "knex migrate:latest",
+    "rollback:dev": "knex migrate:rollback",
+    "seed:dev": "knex seed:run",
+    "migrate:prod": "heroku run knex migrate:latest -a YOUR_HEROKU_APP_NAME",
+    "rollback:prod": "heroku run knex migrate:rollback -a YOUR_HEROKU_APP_NAME",
+    "database:prod": "heroku pg:psql -a YOUR_HEROKU_APP_NAME",
+    "seed:prod": "heroku run knex seed:run -a YOUR_HEROKU_APP_NAME",
+    "test": "cross-env NODE_ENV=testing jest --verbose --runInBand",
+    "deploy": "git push heroku main"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kfam22/reward-points-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "engines": {
+    "node": "16.13.2"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kfam22/reward-points-api/issues"
+  },
+  "homepage": "https://github.com/kfam22/reward-points-api#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.18.1",
+    "helmet": "^5.0.2",
+    "knex": "^2.0.0",
+    "knex-cleaner": "^1.3.1",
+    "pg": "^8.7.3"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.4.1",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.14.0",
+    "jest": "^28.0.3",
+    "nodemon": "^2.0.16",
+    "supertest": "^6.2.3"
+  }
+}
