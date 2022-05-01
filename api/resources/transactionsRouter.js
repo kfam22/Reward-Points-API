@@ -38,4 +38,20 @@ router.get('/points-by-payer', (req, res, next) => {
     ).catch(next)
 });
 
+// [POST] api/transactions/add
+
+// add middleware to validate that points is an integer and that payer is a valid string
+router.post('/add', (req, res, next) =>{
+    const { payer, points } = req.body
+    Transaction.addTransaction({ payer, points})
+    .then(newTransaction => {
+        Transaction.getTransactions().then(
+            transactions => {
+                res.status(201).json(transactions)
+            }
+        )
+    })
+    .catch(next)
+  });
+
 module.exports = router;

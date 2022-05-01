@@ -9,7 +9,18 @@ function getTotalPoints(){
     .sum('points as total_points')
 }
 
+async function addTransaction(transaction) {
+    const [newTransaction] = await db('transactions')
+    .insert(transaction, 
+        ['transaction_id', 
+        'payer', 
+        'points', 
+        'timestamp'])
+        return newTransaction;
+  }
+
 module.exports = {
     getTotalPoints,
     getTransactions,
+    addTransaction,
 }
