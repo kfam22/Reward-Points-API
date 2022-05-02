@@ -1,6 +1,45 @@
 const Transaction = require('./transactionsModel');
 
-// create middleware to validate that points is an integer and that payer is a valid string
+function validatePayer(req, res, next) {
+    if(req.body.payer && req.body.payer.trim()){
+      req.body.payer = req.body.payer.trim().toUpperCase();
+      next();
+    } else {
+      next({
+        status: 400,
+        message: "payer is required"
+      })
+    }
+  }
 
-// create middleware to validate that points is a positive integer
-// create middleware to check if there are enough total points to spend the requested amount of points
+function validatePoints(req, res, next) {
+    if(req.body.points && typeof req.body.points === 'number' && req.body.points > 0){
+      next();
+    } else {
+      next({
+        status: 400,
+        message: "points is required and must be a positive number"
+      })
+    }
+  }
+
+
+const checkTotalPoints = async (req, res, next) => {
+    try{
+        const totalPoints = await Transaction.getTotalPoints()
+        console.log('totalPoints', totalPoints, 'requested points', req.body.points)
+        if (Number(totalPoints[0].total_points) < req.body.points) {
+          next({ status: 400, message: 'Not enough points'})
+        } else {
+          next()
+        }
+     } catch (err) {
+       next(err)
+     }
+}
+
+module.exports = {
+    validatePayer,
+    validatePoints,
+    checkTotalPoints,
+}

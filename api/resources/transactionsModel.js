@@ -26,12 +26,6 @@ async function addTransaction(transaction) {
         return newTransaction;
   }
 
-//   function spendPoints(transaction_id){
-//     return db('transactions')
-//     .where('transaction_id', transaction_id)
-//     .del()
-// }
-
 module.exports = {
     getTotalPoints,
     getTransactions,

@@ -1,5 +1,6 @@
 const router = require('express').Router()
 const Transaction = require('./transactionsModel')
+const { validatePayer, validatePoints, checkTotalPoints } = require('./transactionsMiddleware')
 
 // [GET] api/transactions  gets a list of all transactions (includes payer, points, timestamp, and id. ordered by timestamp)
 router.get('/', (req, res, next) => {
@@ -42,7 +43,7 @@ router.get('/points-by-payer', (req, res, next) => {
 // [POST] api/transactions/add
 
 // create middleware to validate that points is an integer and that payer is a valid string
-router.post('/add', (req, res, next) =>{
+router.post('/add', validatePayer, validatePoints, (req, res, next) =>{
     const { payer, points } = req.body;
     Transaction.addTransaction({ payer, points})
     .then(newTransaction => {
@@ -57,50 +58,47 @@ router.post('/add', (req, res, next) =>{
 
 
 //   [POST] API/transactions/spend
-let spent = {};
+let remainingPoints = {};
 
-router.get('/spent', (req, res) => {
-    res.status(200).json(spent)
+router.get('/remainingPoints', (req, res) => {
+    res.status(200).json(remainingPoints)
 })
-// spent format: transaction_id: 200 (remaining points)
-router.post('/spend', (req, res, next) =>{
-    // create middleware to validate that points is a positive integer
-    // create middleware to check if there are enough total points to spend the requested amount of points
-
+// remainingPoints format: transaction_id: 200 (remaining points)
+router.post('/spend', validatePoints, checkTotalPoints, (req, res, next) =>{
     let { points } = req.body;
 
     Transaction.getTransactions()
-    .then(resource => {
+    .then(transaction => {
         let transactionBatch = [];
         let idx = 0;
         while(points > 0){
-
-            if(spent[resource[idx].transaction_id] === undefined) {
-            spent[resource[idx].transaction_id] = resource[idx].points;
+            if(remainingPoints[transaction[idx].transaction_id] === undefined) {
+            remainingPoints[transaction[idx].transaction_id] = transaction[idx].points;
             } 
-            if(spent[resource[idx].transaction_id] === 0){
+            if(remainingPoints[transaction[idx].transaction_id] <= 0){
                 idx++
                 continue
             }
-            if(points > spent[resource[idx].transaction_id]){
-                transactionBatch.push({'payer': resource[idx].payer, 'points': (spent[resource[idx].transaction_id] * -1)});
-                points = points - spent[resource[idx].transaction_id]
-                spent[resource[idx].transaction_id] = 0;
+            if(points >= remainingPoints[transaction[idx].transaction_id]){
+                transactionBatch.push({'payer': transaction[idx].payer, 'points': (remainingPoints[transaction[idx].transaction_id] * -1)});
+                points = points - remainingPoints[transaction[idx].transaction_id]
+                remainingPoints[transaction[idx].transaction_id] = 0;
                 
             }else {
-                transactionBatch.push({'payer': resource[idx].payer, 'points': (points * -1)});
-                spent[resource[idx].transaction_id] -= points;
+                transactionBatch.push({'payer': transaction[idx].payer, 'points': (points * -1)});
+                remainingPoints[transaction[idx].transaction_id] -= points;
                 points -= points
             }
 
-            if(idx < resource.length - 1){
+            if(idx < transaction.length - 1){
                 idx++
             }else{
                 break;
             } 
         }
         Transaction.addTransaction(transactionBatch)
-        .then(newBatch => {
+        .then(() => {
+
             res.status(201).json(transactionBatch)
         })
     })

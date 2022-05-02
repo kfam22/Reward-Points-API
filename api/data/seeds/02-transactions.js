@@ -3,12 +3,12 @@
  * @returns { Promise<void> } 
  */
  const transactions = [
-  { payer: 'Target', points: 100},
-  { payer: 'Walmart', points: 1000},
-  { payer: 'Amazon', points: 400},
-  { payer: 'Trader Joes', points: 100},
-  { payer: 'Target', points: 100},
-  { payer: 'Walmart', points: 200}
+  { payer: 'TARGET', points: 100},
+  { payer: 'WALMART', points: 1000},
+  { payer: 'AMAZON', points: 400},
+  { payer: 'TRADER JOES', points: 100},
+  { payer: 'TARGET', points: 100},
+  { payer: 'WALMART', points: 200}
 ]
 
 exports.transactions = transactions
