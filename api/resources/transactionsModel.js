@@ -2,6 +2,13 @@ const db = require('../data/db-config');
 
 function getTransactions(){
     return db('transactions')
+    .orderBy('timestamp')
+}
+
+function getOldestTransaction(){
+    return db('transactions')
+    .orderBy('timestamp')
+    .first()
 }
 
 function getTotalPoints(){
@@ -19,8 +26,15 @@ async function addTransaction(transaction) {
         return newTransaction;
   }
 
+//   function spendPoints(transaction_id){
+//     return db('transactions')
+//     .where('transaction_id', transaction_id)
+//     .del()
+// }
+
 module.exports = {
     getTotalPoints,
     getTransactions,
+    getOldestTransaction,
     addTransaction,
 }

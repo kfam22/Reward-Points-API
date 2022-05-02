@@ -10,8 +10,11 @@ server.use(helmet())
 server.use(cors())
 server.use('/api/transactions', transactionsRouter)
 
-server.use('*', (req, res, next) => { //catch all for non /api/transactions urls
-    res.json({ api: 'page not found'})
-   })
-
+server.use((err, req, res, next) => {
+    res.status(err.status || 500).json({
+      message: err.message,
+      stack: err.stack,
+    });
+  });
+  
 module.exports = server
