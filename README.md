@@ -1,5 +1,5 @@
-# 🐕 Fetch Reward Points Api
-API that that accepts HTTP requests and returns responses to read, add, and spend user points through payer/partner transactions. 
+# 🐕 Fetch Reward Points API
+service that that accepts HTTP requests and returns responses to read, add, and spend user points through payer/partner transactions. 
 
 ## Background
 - Users have points in their accounts
