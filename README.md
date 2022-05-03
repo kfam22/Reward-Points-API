@@ -58,7 +58,12 @@ npm run start
   "message": "Here to fetch reward points? Please navigate to a valid endpoint."
 }
 ```
-5. Run Tests
+5. Run Migration and Seed files 
+```
+npm run migrate:dev
+npm run seed:dev
+```
+5. Run Tests (in a separate Terminal)
 ```
 npm run test
 ```
