@@ -40,7 +40,7 @@ router.get('/points/payer', (req, res, next) => {
     ).catch(next)
 });
 
-// [POST] api/transactions/points/add
+// [POST] api/transactions/points/add  positive points transaction (requires payer and points in req.body)
 router.post('/points/add', validatePayer, validatePoints, (req, res, next) =>{
     const { payer, points } = req.body;
     Transaction.addTransaction({ payer, points})
