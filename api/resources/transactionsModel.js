@@ -5,15 +5,16 @@ function getTransactions(){
     .orderBy('timestamp')
 }
 
-function getOldestTransaction(){
-    return db('transactions')
-    .orderBy('timestamp')
-    .first()
-}
+// function getOldestTransaction(){
+//     return db('transactions')
+//     .orderBy('timestamp')
+//     .first()
+// }
 
 function getTotalPoints(){
     return db('transactions')
     .sum('points as total_points')
+    .first()
 }
 
 async function addTransaction(transaction) {
@@ -29,6 +30,5 @@ async function addTransaction(transaction) {
 module.exports = {
     getTotalPoints,
     getTransactions,
-    getOldestTransaction,
     addTransaction,
 }

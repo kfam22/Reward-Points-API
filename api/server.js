@@ -10,6 +10,10 @@ server.use(helmet())
 server.use(cors())
 server.use('/api/transactions', transactionsRouter)
 
+server.use('*', (req, res) => {
+  res.json({ message: 'page not found'});
+});
+
 server.use((err, req, res, next) => {
     res.status(err.status || 500).json({
       message: err.message,

@@ -1,12 +1,12 @@
 const Transaction = require('./transactionsModel');
 
 function validatePayer(req, res, next) {
-    if(req.body.payer && req.body.payer.trim()){
+    if(typeof req.body.payer === 'string' && req.body.payer && req.body.payer.trim()){
       req.body.payer = req.body.payer.trim().toUpperCase();
       next();
     } else {
       next({
-        status: 400,
+        status: 422,
         message: "payer is required"
       })
     }
@@ -17,7 +17,7 @@ function validatePoints(req, res, next) {
       next();
     } else {
       next({
-        status: 400,
+        status: 422,
         message: "points is required and must be a positive number"
       })
     }
@@ -27,8 +27,7 @@ function validatePoints(req, res, next) {
 const checkTotalPoints = async (req, res, next) => {
     try{
         const totalPoints = await Transaction.getTotalPoints()
-        console.log('totalPoints', totalPoints, 'requested points', req.body.points)
-        if (Number(totalPoints[0].total_points) < req.body.points) {
+        if (Number(totalPoints.total_points) < req.body.points) {
           next({ status: 400, message: 'Not enough points'})
         } else {
           next()

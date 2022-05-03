@@ -5,8 +5,8 @@ const { validatePayer, validatePoints, checkTotalPoints } = require('./transacti
 // [GET] api/transactions  gets a list of all transactions (includes payer, points, timestamp, and id. ordered by timestamp)
 router.get('/', (req, res, next) => {
     Transaction.getTransactions()
-    .then(resource => {
-        res.status(200).json(resource)
+    .then(transactions => {
+        res.status(200).json(transactions)
     })
     .catch(next)
 });
@@ -14,14 +14,14 @@ router.get('/', (req, res, next) => {
 // [GET] api/transactions/points  gets users total points
 router.get('/points', (req, res, next) => {
     Transaction.getTotalPoints()
-    .then(resource => {
-        res.status(200).json(resource)
+    .then(totalPoints => {
+        res.status(200).json(totalPoints)
     })
     .catch(next)
 });
 
-// [GET] api/transactions/points-by-payer  gets a list of payers and their points balance (includes payer, points)
-router.get('/points-by-payer', (req, res, next) => {
+// [GET] api/transactions/payer-points  gets a list of payers and their points balance (includes payer, points)
+router.get('/payer-points', (req, res, next) => {
     Transaction.getTransactions()
     .then(transactions => {
         let payers = {};
@@ -41,8 +41,6 @@ router.get('/points-by-payer', (req, res, next) => {
 });
 
 // [POST] api/transactions/add
-
-// create middleware to validate that points is an integer and that payer is a valid string
 router.post('/add', validatePayer, validatePoints, (req, res, next) =>{
     const { payer, points } = req.body;
     Transaction.addTransaction({ payer, points})
@@ -59,11 +57,8 @@ router.post('/add', validatePayer, validatePoints, (req, res, next) =>{
 
 //   [POST] API/transactions/spend
 let remainingPoints = {};
-
-router.get('/remainingPoints', (req, res) => {
-    res.status(200).json(remainingPoints)
-})
 // remainingPoints format: transaction_id: 200 (remaining points)
+
 router.post('/spend', validatePoints, checkTotalPoints, (req, res, next) =>{
     let { points } = req.body;
 
@@ -98,7 +93,6 @@ router.post('/spend', validatePoints, checkTotalPoints, (req, res, next) =>{
         }
         Transaction.addTransaction(transactionBatch)
         .then(() => {
-
             res.status(201).json(transactionBatch)
         })
     })
