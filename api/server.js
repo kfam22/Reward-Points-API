@@ -1,7 +1,7 @@
 const express = require('express')
 const helmet = require('helmet')
 const cors = require('cors')
-const transactionsRouter = require('./resources/transactionsRouter')
+const transactionsRouter = require('./transactions/transactionsRouter')
 const server = express()
 
 
@@ -11,7 +11,7 @@ server.use(cors())
 server.use('/api/transactions', transactionsRouter)
 
 server.use('*', (req, res) => {
-  res.json({ message: 'page not found'});
+  res.json({ message: 'Here to fetch reward points? Please navigate to a valid endpoint.'});
 });
 
 server.use((err, req, res, next) => {

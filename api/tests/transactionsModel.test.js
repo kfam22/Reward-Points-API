@@ -1,4 +1,4 @@
-const Transaction = require('../resources/transactionsModel');
+const Transaction = require('../transactions/transactionsModel');
 const db = require('../data/db-config')
 
 beforeAll(async () => {

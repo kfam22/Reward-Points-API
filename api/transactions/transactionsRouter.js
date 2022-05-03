@@ -20,8 +20,8 @@ router.get('/points', (req, res, next) => {
     .catch(next)
 });
 
-// [GET] api/transactions/payer-points  gets a list of payers and their points balance (includes payer, points)
-router.get('/payer-points', (req, res, next) => {
+// [GET] api/transactions/points/payer  gets a list of payers and their points balance (includes payer, points)
+router.get('/points/payer', (req, res, next) => {
     Transaction.getTransactions()
     .then(transactions => {
         let payers = {};
@@ -40,8 +40,8 @@ router.get('/payer-points', (req, res, next) => {
     ).catch(next)
 });
 
-// [POST] api/transactions/add
-router.post('/add', validatePayer, validatePoints, (req, res, next) =>{
+// [POST] api/transactions/points/add
+router.post('/points/add', validatePayer, validatePoints, (req, res, next) =>{
     const { payer, points } = req.body;
     Transaction.addTransaction({ payer, points})
     .then(newTransaction => {
@@ -55,11 +55,11 @@ router.post('/add', validatePayer, validatePoints, (req, res, next) =>{
   });
 
 
-//   [POST] API/transactions/spend
+//   [POST] API/transactions/points/spend
 let remainingPoints = {};
 // remainingPoints format: transaction_id: 200 (remaining points)
 
-router.post('/spend', validatePoints, checkTotalPoints, (req, res, next) =>{
+router.post('/points/spend', validatePoints, checkTotalPoints, (req, res, next) =>{
     let { points } = req.body;
 
     Transaction.getTransactions()
